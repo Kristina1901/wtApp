@@ -82,6 +82,7 @@ const favoritesCity = ref<City[]>(
   JSON.parse(localStorage.getItem("favoritesCity") || "[]")
 );
 const isFavorite = ref<boolean>(false);
+
 const filterHourlyForecast = (
   weatherHourly: Array<WeatherData>,
   partOfDay: "day" | "night"
@@ -173,6 +174,9 @@ const handleTimePeriodChange = (newTimePeriod: "day" | "week") => {
 };
 const handleCitySelected = (newCity: City) => {
   city.value = newCity;
+  if (!favoritesCity.value.some((favCity) => favCity.name === newCity.name)) {
+    city.value = null;
+  }
   fetchWeather();
 };
 const groupTemperaturesByDay = (data: WeatherByDataWeek) => {
@@ -221,16 +225,20 @@ const deleteFromFavorites = (cityName: string) => {
     city.value = favoritesCity.value.length > 0 ? favoritesCity.value[0] : null;
   }
 };
-onMounted(async () => {
-  loadFavoritesFromLocalStorage();
+watch(favoritesCity, () => {
+  if (
+    city.value &&
+    !favoritesCity.value.some((favCity) => favCity.name === city.value?.name)
+  ) {
+    city.value = null;
+  }
 });
 watch([locale, timePeriod, partDay], async () => {
   if (city.value) {
     await fetchWeather();
   }
 });
+onMounted(async () => {
+  loadFavoritesFromLocalStorage();
+});
 </script>
-
-<style scoped>
-@import "../css/index.css";
-</style>
