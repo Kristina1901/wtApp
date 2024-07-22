@@ -63,7 +63,7 @@
 }
 .weather.favorite {
   border: 2px solid #ff0000;
-  padding: 10px;
+  
 }
 .action__wrapper {
   display: flex;
