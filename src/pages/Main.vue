@@ -211,17 +211,21 @@ onMounted(async () => {
     isLoading.changeStateFalse();
   }
 });
-watch([city, locale, timePeriod], async () => {
-  isLoading.changeStateTrue();
-  try {
-    if (city.value) {
-      await fetchWeather();
-    }
+watch(city, async (newCity) => {
+  if (newCity) {
     isFavorite.value = favoritesCity.value.some(
-      (favoriteCity) => favoriteCity.name === city.value?.name
+      (favoriteCity) => favoriteCity.name === newCity.name
     );
-  } finally {
-    isLoading.changeStateFalse();
+  }
+});
+watch([locale, timePeriod], async () => {
+  if (city.value) {
+    isLoading.changeStateTrue();
+    try {
+      await fetchWeather();
+    } finally {
+      isLoading.changeStateFalse();
+    }
   }
 });
 const formatDate = (timestamp: number) => {
