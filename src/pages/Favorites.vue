@@ -12,7 +12,7 @@
         <button class="delete" @click="deleteFromFavorites(cityName)">-</button>
       </template>
     </CitiesList>
-    <div>
+    <div v-if="city">
       <div class="action__wrapper-favorites">
         <div class="button__wrapper">
           <div class="button__wrapper-sub">
@@ -46,6 +46,7 @@
         <Loader v-if="isLoading.state" />
       </div>
     </div>
+    <div v-else>{{ $t("select") }}</div>
   </div>
 </template>
 
@@ -68,9 +69,7 @@ import Loader from "../components/Loader.vue";
 import SwitchPartDay from "../components/SwitchPartDay.vue";
 import CitiesList from "../components/CitiesList.vue";
 
-const city = ref<City | null>(
-  JSON.parse(localStorage.getItem("favoritesCity") || "[]")[0] || null
-);
+const city = ref<City | null>(null);
 const weatherbyDay = ref<UserWeather | null>(null);
 const weatherbyWeek = ref<WeatherByWeekAverage | null>(null);
 const hourlyForecastByDay = ref<HourlyForecast[]>([]);
@@ -111,6 +110,7 @@ const filterHourlyForecast = (
     formattedTime: formatDate(forecast.dt),
   }));
 };
+
 const fetchWeather = async () => {
   if (!city.value?.latitude) return;
   isLoading.changeStateTrue();
@@ -222,9 +222,6 @@ const deleteFromFavorites = (cityName: string) => {
   }
 };
 onMounted(async () => {
-  if (city.value) {
-    await fetchWeather();
-  }
   loadFavoritesFromLocalStorage();
 });
 watch([city, locale, timePeriod, partDay], async () => {
