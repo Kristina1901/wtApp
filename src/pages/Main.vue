@@ -211,7 +211,7 @@ onMounted(async () => {
     isLoading.changeStateFalse();
   }
 });
-watch([locale, timePeriod], async () => {
+watch([city, locale, timePeriod], async () => {
   isLoading.changeStateTrue();
   try {
     if (city.value) {
