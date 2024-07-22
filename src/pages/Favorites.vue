@@ -224,7 +224,7 @@ const deleteFromFavorites = (cityName: string) => {
 onMounted(async () => {
   loadFavoritesFromLocalStorage();
 });
-watch([city, locale, timePeriod, partDay], async () => {
+watch([locale, timePeriod, partDay], async () => {
   if (city.value) {
     await fetchWeather();
   }
