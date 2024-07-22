@@ -8,5 +8,6 @@
   "message": "You can only have a maximum of 5 favorite cities",
   "warn": "Are you sure you want to delete the city?",
   "cancel": "cancel",
-  "notFound": "No favorites found"
+  "notFound": "No favorites found",
+  "select": "Select a city"
 }
