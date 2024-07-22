@@ -1,0 +1,12 @@
+{
+  "main": "Main",
+  "day": "Day",
+  "week": "Week",
+  "favorites": "Favorites",
+  "city": "Your city",
+  "placeholder": "Enter city",
+  "message": "You can only have a maximum of 5 favorite cities",
+  "warn": "Are you sure you want to delete the city?",
+  "cancel": "cancel",
+  "notFound": "No favorites found"
+}

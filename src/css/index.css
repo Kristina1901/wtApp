@@ -1,0 +1,139 @@
+.city__wrapper {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.city {
+  font-weight: 700;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.button {
+  width: 60px;
+  cursor: pointer;
+  height: 30px;
+  font-size: 14px;
+  border-radius: 5px;
+  background: #3457d5;
+  color: white;
+  border: 1px solid #00008b;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.weather {
+  display: flex;
+  align-items: center;
+  border: 2px solid #3457d5;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 70px;
+  min-height: 70px;
+  height: 70px;
+}
+.button__wrapper {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.weaher__icon {
+  width: 30px;
+  height: 30px;
+}
+.city__icon {
+  width: 30px;
+  height: 30px;
+}
+.add {
+  width: 20px;
+  height: 20px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  background-image: url("../assets/img/like.png");
+  background-size: cover;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+.weather span {
+  font-size: 14px;
+}
+.weather.favorite {
+  border: 2px solid #ff0000;
+  padding: 10px;
+}
+.action__wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+.button__wrapper-sub {
+  display: flex;
+  flex-direction: column;
+}
+.button:last-child {
+  margin-top: 20px;
+}
+.delete {
+  width: 20px;
+  height: 20px;
+  right: 20px;
+  bottom: 5px;
+  cursor: pointer;
+  bottom: 0;
+  background-color: black;
+  color: white;
+}
+.action__wrapper-favorites {
+  display: flex;
+  justify-content: space-between;
+}
+.favorites__container {
+  padding-top: 20px;
+}
+@media (min-width: 1440px) {
+  .button {
+    width: 80px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .city__wrapper {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  .weaher__icon {
+    width: 50px;
+    height: 50px;
+  }
+  .city__icon {
+    width: 50px;
+    height: 50px;
+  }
+  .city__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .weather {
+    width: 420px;
+    padding: 20px;
+  }
+  .weather span {
+    font-size: 16px;
+  }
+  .city {
+    font-weight: 700;
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+  .button:last-child {
+    margin-left: 20px;
+    margin-top: 0;
+  }
+  .button__wrapper-sub {
+    flex-direction: row;
+  }
+}

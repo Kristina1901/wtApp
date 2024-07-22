@@ -1,0 +1,16 @@
+body {
+  min-height: 100vh;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+}
+a {
+  text-decoration: none;
+  color: black;
+  display: block;
+  font-weight: 700;
+}
+@media (min-width: 1440px) {
+  a {
+    font-size: 32px;
+  }
+}
