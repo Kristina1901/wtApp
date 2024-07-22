@@ -81,7 +81,6 @@ import {
 } from "../api/api";
 import {
   UserInfo,
-  WeatherData,
   UserWeather,
   HourlyForecast,
   WeatherByDataWeek,
@@ -96,7 +95,7 @@ import SwitchPartDay from "../components/SwitchPartDay.vue";
 import Autocomplete from "../components/Autocomplete.vue";
 import CitiesList from "../components/CitiesList.vue";
 import ModalInfo from "../components/ModalInfo.vue";
-import { groupTemperaturesByDay } from "../helpers/index";
+import { groupTemperaturesByDay, filterHourlyForecast } from "../helpers/index";
 
 const city = ref<City | null>(null);
 const weatherbyDay = ref<UserWeather | null>(null);
@@ -113,34 +112,6 @@ const showAddToFavoritesModal = ref<boolean>(false);
 const showDeleteCityModal = ref<boolean>(false);
 const cityToDelete = ref<string | null>(null);
 
-const filterHourlyForecast = (
-  weatherHourly: Array<WeatherData>,
-  partOfDay: "day" | "night"
-) => {
-  const currentDate = new Date().toISOString().split("T")[0];
-  let hourlyData = weatherHourly.filter((forecast) => {
-    const forecastDate = new Date(forecast.dt * 1000)
-      .toISOString()
-      .split("T")[0];
-    return forecastDate === currentDate;
-  });
-  if (partOfDay === "night") {
-    hourlyData = hourlyData.filter((forecast) => {
-      const time = new Date(forecast.dt * 1000).getHours();
-      return (time >= 22 && time < 23) || (time >= 0 && time < 4);
-    });
-  } else if (partOfDay === "day") {
-    hourlyData = hourlyData.filter((forecast) => {
-      const time = new Date(forecast.dt * 1000).getHours();
-      return time >= 6 && time <= 21;
-    });
-  }
-  return hourlyData.map((forecast) => ({
-    dt: forecast.dt,
-    temp: forecast.temp,
-    formattedTime: formatDate(forecast.dt),
-  }));
-};
 const fetchWeather = async () => {
   if (!city.value?.latitude) {
     return;
@@ -179,10 +150,7 @@ const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
   }
 };
 const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
-  if (
-    city.value?.latitude === undefined ||
-    city.value?.longitude === undefined
-  ) {
+  if (!city.value?.latitude) {
     return null;
   }
   try {
@@ -228,10 +196,6 @@ watch([locale, timePeriod], async () => {
     }
   }
 });
-const formatDate = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-};
 const getWeatherIconUrl = (icon: string) => {
   return new URL(`../assets/img/${icon}.png`, import.meta.url).href;
 };
@@ -304,7 +268,6 @@ const confirmAddToFavorites = () => {
   if (city.value) {
     const storedFavorites = localStorage.getItem("favoritesCity");
     let favorites: City[] = [];
-
     if (storedFavorites) {
       favorites = JSON.parse(storedFavorites);
     }

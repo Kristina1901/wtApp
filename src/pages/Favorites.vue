@@ -3,7 +3,6 @@
     <p>No favorites found</p>
   </div>
   <div v-else class="favorites__container">
-    <p>{{ city?.name }}</p>
     <CitiesList
       :favoritesCity="favoritesCity"
       @city-selected="handleCitySelected"
@@ -12,6 +11,7 @@
         <button class="delete" @click="deleteFromFavorites(cityName)">-</button>
       </template>
     </CitiesList>
+    <p>{{ city?.name }}</p>
     <div v-if="city">
       <div class="action__wrapper-favorites">
         <div class="button__wrapper">
@@ -54,7 +54,6 @@
 import { ref, onMounted, watch } from "vue";
 import { getUserWeatherByAllDay, getUserWeatherByAllWeek } from "../api/api";
 import {
-  WeatherData,
   UserWeather,
   HourlyForecast,
   WeatherByDataWeek,
@@ -67,7 +66,7 @@ import { useLoaderState } from "../store/isloading";
 import Loader from "../components/Loader.vue";
 import SwitchPartDay from "../components/SwitchPartDay.vue";
 import CitiesList from "../components/CitiesList.vue";
-import { groupTemperaturesByDay } from "../helpers/index";
+import { groupTemperaturesByDay, filterHourlyForecast } from "../helpers/index";
 
 const city = ref<City | null>(null);
 const weatherbyDay = ref<UserWeather | null>(null);
@@ -82,35 +81,6 @@ const favoritesCity = ref<City[]>(
   JSON.parse(localStorage.getItem("favoritesCity") || "[]")
 );
 const isFavorite = ref<boolean>(false);
-
-const filterHourlyForecast = (
-  weatherHourly: Array<WeatherData>,
-  partOfDay: "day" | "night"
-) => {
-  const currentDate = new Date().toISOString().split("T")[0];
-  let hourlyData = weatherHourly.filter((forecast) => {
-    const forecastDate = new Date(forecast.dt * 1000)
-      .toISOString()
-      .split("T")[0];
-    return forecastDate === currentDate;
-  });
-  if (partOfDay === "night") {
-    hourlyData = hourlyData.filter((forecast) => {
-      const time = new Date(forecast.dt * 1000).getHours();
-      return (time >= 22 && time < 23) || (time >= 0 && time < 4);
-    });
-  } else if (partOfDay === "day") {
-    hourlyData = hourlyData.filter((forecast) => {
-      const time = new Date(forecast.dt * 1000).getHours();
-      return time >= 6 && time <= 21;
-    });
-  }
-  return hourlyData.map((forecast) => ({
-    dt: forecast.dt,
-    temp: forecast.temp,
-    formattedTime: formatDate(forecast.dt),
-  }));
-};
 
 const fetchWeather = async () => {
   if (!city.value?.latitude) return;
@@ -159,10 +129,6 @@ const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
   } catch (error) {
     return null;
   }
-};
-const formatDate = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 const handlePartDayChange = (newPartOfDay: "day" | "night") => {
   partDay.value = newPartOfDay;
