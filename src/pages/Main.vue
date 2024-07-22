@@ -85,7 +85,6 @@ import {
   UserWeather,
   HourlyForecast,
   WeatherByDataWeek,
-  TemperatureData,
   WeatherByWeekAverage,
   City,
 } from "../interfaces/interfaces";
@@ -97,6 +96,7 @@ import SwitchPartDay from "../components/SwitchPartDay.vue";
 import Autocomplete from "../components/Autocomplete.vue";
 import CitiesList from "../components/CitiesList.vue";
 import ModalInfo from "../components/ModalInfo.vue";
+import { groupTemperaturesByDay } from "../helpers/index";
 
 const city = ref<City | null>(null);
 const weatherbyDay = ref<UserWeather | null>(null);
@@ -240,27 +240,6 @@ const handlePartDayChange = (newPartOfDay: "day" | "night") => {
 };
 const handleTimePeriodChange = (newTimePeriod: "day" | "week") => {
   timePeriod.value = newTimePeriod;
-};
-const groupTemperaturesByDay = (data: WeatherByDataWeek) => {
-  const grouped: Record<string, TemperatureData> = {};
-  data.list.forEach((entry) => {
-    const date = entry.dt_txt.split(" ")[0];
-    if (!grouped[date]) {
-      grouped[date] = {
-        day: date,
-        temperatures: [],
-        averageTemperature: 0,
-      };
-    }
-    grouped[date].temperatures.push(entry.main.temp);
-  });
-  for (const date in grouped) {
-    const temps = grouped[date].temperatures;
-    const avgTemp =
-      temps.reduce((sum: number, temp: number) => sum + temp, 0) / temps.length;
-    grouped[date].averageTemperature = avgTemp;
-  }
-  return grouped;
 };
 const updateForecasts = (weatherData: UserWeather) => {
   hourlyForecastByDay.value = filterHourlyForecast(weatherData.hourly, "day");
