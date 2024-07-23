@@ -84,7 +84,6 @@ input:checked + .slider:before {
 }
 .container__weather {
   display: flex;
-  margin-top: 20px;
 }
 @media (min-width: 1440px) {
   .container__weather {

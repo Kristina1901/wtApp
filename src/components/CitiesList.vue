@@ -32,6 +32,7 @@ const selectCity = (name: City) => {
   list-style-type: none;
   width: 190px;
   min-height: 217px;
+  padding: 0;
 }
 .list__item {
   border: 1px solid #00008b;

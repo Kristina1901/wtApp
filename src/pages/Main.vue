@@ -17,10 +17,6 @@
       </div>
     </div>
     <div>
-      <SwitchPartDay
-        v-if="timePeriod === 'day'"
-        @partDayChange="handlePartDayChange"
-      />
       <Autocomplete @citySelected="handleCitySelected" />
     </div>
   </div>
@@ -33,13 +29,19 @@
         {{ $t("week") }}
       </button>
     </div>
-    <CitiesList :favoritesCity="favoritesCity">
-      <template #delete-button="{ cityName }">
-        <button class="delete" @click="showDeleteCityConfirmation(cityName)">
-          -
-        </button>
-      </template>
-    </CitiesList>
+    <div>
+      <SwitchPartDay
+        v-if="timePeriod === 'day'"
+        @partDayChange="handlePartDayChange"
+      />
+      <CitiesList :favoritesCity="favoritesCity">
+        <template #delete-button="{ cityName }">
+          <button class="delete" @click="showDeleteCityConfirmation(cityName)">
+            -
+          </button>
+        </template>
+      </CitiesList>
+    </div>
   </div>
   <div class="wrapper">
     <Chart
