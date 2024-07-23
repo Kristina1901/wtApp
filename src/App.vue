@@ -31,8 +31,7 @@ const switchLang = () => {
   padding-top: 20px;
 }
 .container {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding: 20px;
 }
 .logo {
   width: 50px;

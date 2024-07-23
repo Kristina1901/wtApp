@@ -119,6 +119,7 @@ onUnmounted(() => {
   position: relative;
   min-height: 165px;
   border-radius: 5px;
+  margin-top: 20px;
 }
 input {
   height: 30px;
@@ -143,5 +144,10 @@ input {
 .autocomplete-result:hover {
   background-color: #3457d5;
   color: white;
+}
+@media (min-width: 1440px) {
+  .autocomplete {
+    margin-top: 0;
+  }
 }
 </style>
