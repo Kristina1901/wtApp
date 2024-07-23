@@ -3,8 +3,10 @@
     <div class="modal" @click.stop>
       <p>{{ props.message }}</p>
       <div class="modal-buttons">
-        <button v-if="props.showConfirmButton" @click="confirm">OK</button>
-        <button v-if="props.showCancelButton" @click="cancel">
+        <button v-if="props.showConfirmButton" @click="confirm" class="button">
+          OK
+        </button>
+        <button v-if="props.showCancelButton" @click="cancel" class="button">
           {{ $t("cancel") }}
         </button>
       </div>
@@ -41,14 +43,16 @@ const cancel = () => {
 <style scoped>
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 .modal {
   background: white;
@@ -61,5 +65,13 @@ const cancel = () => {
 }
 .modal-buttons button {
   margin: 0 10px;
+}
+.button {
+  cursor: pointer;
+  border-radius: 5px;
+  background: #3457d5;
+  color: white;
+  border: 1px solid #00008b;
+  padding: 5px;
 }
 </style>
