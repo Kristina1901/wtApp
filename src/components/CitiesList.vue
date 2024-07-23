@@ -22,8 +22,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: "city-selected", city: City): void;
 }>();
-const selectCity = (city: City) => {
-  emit("city-selected", city);
+const selectCity = (name: City) => {
+  emit("city-selected", name);
 };
 </script>
 

@@ -47,16 +47,16 @@
         />
         <Loader v-if="isLoading.state" />
       </div>
-      <ModalInfo
-        v-model:modelValue="showDeleteCityModal"
-        :message="$t('warn')"
-        showConfirmButton
-        showCancelButton
-        @confirm="confirmDelete"
-        @cancel="cancelDelete"
-      />
     </div>
     <div v-else>{{ $t("select") }}</div>
+    <ModalInfo
+      v-model:modelValue="showDeleteCityModal"
+      :message="$t('warn')"
+      showConfirmButton
+      showCancelButton
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </div>
 </template>
 
@@ -91,7 +91,6 @@ const timePeriod = ref<"day" | "week">("day");
 const favoritesCity = ref<City[]>(
   JSON.parse(localStorage.getItem("favoritesCity") || "[]")
 );
-const isFavorite = ref<boolean>(false);
 const showDeleteCityModal = ref<boolean>(false);
 const cityToDelete = ref<string | null>(null);
 const fetchWeather = async () => {
@@ -113,7 +112,6 @@ const fetchWeather = async () => {
 };
 const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
   if (!city.value?.latitude) return null;
-
   return await getUserWeatherByAllDay(
     city.value.latitude,
     city.value.longitude,
@@ -158,9 +156,6 @@ const loadFavoritesFromLocalStorage = () => {
   const storedFavorites = localStorage.getItem("favoritesCity");
   if (storedFavorites) {
     favoritesCity.value = JSON.parse(storedFavorites);
-    isFavorite.value = favoritesCity.value.some(
-      (favoriteCity) => favoriteCity.name === city.value?.name
-    );
   }
 };
 const confirmDeleteFromFavorites = (cityName: string) => {
