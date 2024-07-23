@@ -35,7 +35,9 @@
     </div>
     <CitiesList :favoritesCity="favoritesCity">
       <template #delete-button="{ cityName }">
-        <button class="delete" @click="deleteFromFavorites(cityName)">-</button>
+        <button class="delete" @click="showDeleteCityConfirmation(cityName)">
+          -
+        </button>
       </template>
     </CitiesList>
   </div>
@@ -60,7 +62,6 @@
     :message="$t('message')"
     showConfirmButton
     @confirm="confirmAddToFavorites"
-    @cancel="cancelAddToFavorites"
   />
   <ModalInfo
     v-model:modelValue="showDeleteCityModal"
@@ -254,6 +255,10 @@ const deleteFromFavorites = (cityName: string) => {
     (favoriteCity) => favoriteCity.name === city.value?.name
   );
 };
+const showDeleteCityConfirmation = (cityName: string) => {
+  cityToDelete.value = cityName;
+  showDeleteCityModal.value = true;
+};
 const confirmDelete = () => {
   if (cityToDelete.value) {
     deleteFromFavorites(cityToDelete.value);
@@ -261,8 +266,9 @@ const confirmDelete = () => {
   }
   showDeleteCityModal.value = false;
 };
-const cancelAddToFavorites = () => {
-  showAddToFavoritesModal.value = false;
+const cancelDelete = () => {
+  cityToDelete.value = null;
+  showDeleteCityModal.value = false;
 };
 const confirmAddToFavorites = () => {
   if (city.value) {
@@ -285,9 +291,6 @@ const confirmAddToFavorites = () => {
     }
   }
   showAddToFavoritesModal.value = false;
-};
-const cancelDelete = () => {
-  showDeleteCityModal.value = false;
 };
 </script>
 
