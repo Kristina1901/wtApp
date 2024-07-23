@@ -1,6 +1,6 @@
 <template>
   <div v-if="favoritesCity.length === 0" class="favorites__container">
-    <p>No favorites found</p>
+    <p>{{ $t("notFound") }}</p>
   </div>
   <div v-else class="favorites__container">
     <CitiesList
@@ -8,7 +8,9 @@
       @city-selected="handleCitySelected"
     >
       <template #delete-button="{ cityName }">
-        <button class="delete" @click="deleteFromFavorites(cityName)">-</button>
+        <button class="delete" @click="confirmDeleteFromFavorites(cityName)">
+          -
+        </button>
       </template>
     </CitiesList>
     <p>{{ city?.name }}</p>
@@ -45,6 +47,14 @@
         />
         <Loader v-if="isLoading.state" />
       </div>
+      <ModalInfo
+        v-model:modelValue="showDeleteCityModal"
+        :message="$t('warn')"
+        showConfirmButton
+        showCancelButton
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
     </div>
     <div v-else>{{ $t("select") }}</div>
   </div>
@@ -67,6 +77,7 @@ import Loader from "../components/Loader.vue";
 import SwitchPartDay from "../components/SwitchPartDay.vue";
 import CitiesList from "../components/CitiesList.vue";
 import { groupTemperaturesByDay, filterHourlyForecast } from "../helpers/index";
+import ModalInfo from "../components/ModalInfo.vue";
 
 const city = ref<City | null>(null);
 const weatherbyDay = ref<UserWeather | null>(null);
@@ -81,7 +92,8 @@ const favoritesCity = ref<City[]>(
   JSON.parse(localStorage.getItem("favoritesCity") || "[]")
 );
 const isFavorite = ref<boolean>(false);
-
+const showDeleteCityModal = ref<boolean>(false);
+const cityToDelete = ref<string | null>(null);
 const fetchWeather = async () => {
   if (!city.value?.latitude) return;
   isLoading.changeStateTrue();
@@ -151,6 +163,21 @@ const loadFavoritesFromLocalStorage = () => {
     );
   }
 };
+const confirmDeleteFromFavorites = (cityName: string) => {
+  cityToDelete.value = cityName;
+  showDeleteCityModal.value = true;
+};
+const confirmDelete = () => {
+  if (cityToDelete.value) {
+    deleteFromFavorites(cityToDelete.value);
+    cityToDelete.value = null;
+  }
+  showDeleteCityModal.value = false;
+};
+const cancelDelete = () => {
+  cityToDelete.value = null;
+  showDeleteCityModal.value = false;
+};
 const deleteFromFavorites = (cityName: string) => {
   favoritesCity.value = favoritesCity.value.filter(
     (city) => city.name !== cityName
@@ -177,6 +204,7 @@ onMounted(async () => {
   loadFavoritesFromLocalStorage();
 });
 </script>
+
 <style scoped>
 @import "../css/index.css";
 </style>
