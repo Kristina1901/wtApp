@@ -1,13 +1,10 @@
 <template>
   <ul class="list">
-    <li
-      v-for="city in props.favoritesCity"
-      :key="city.name"
-      class="list__item"
-      @click="selectCity(city)"
-    >
-      <img src="../assets/img/city.png" alt="city" class="list__item-img" />
-      <span class="city">{{ city.name }}</span>
+    <li v-for="city in props.favoritesCity" :key="city.name" class="list__item">
+      <div @click="selectCity(city)" class="list__item-content">
+        <img src="../assets/img/city.png" alt="city" class="list__item-img" />
+        <span class="city__name">{{ city.name }}</span>
+      </div>
       <slot name="delete-button" :cityName="city.name">
         <button class="delete">-</button>
       </slot>
@@ -42,6 +39,7 @@ const selectCity = (city: City) => {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  align-items: center;
 }
 .list__item:last-child {
   margin-bottom: 0;
@@ -63,5 +61,20 @@ const selectCity = (city: City) => {
 .city {
   text-align: center;
   font-size: 14px;
+}
+.list__item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.city__name {
+  min-width: 90px;
+  text-align: center;
+  margin-left: 5px;
+}
+@media (min-width: 1440px) {
+  .list {
+    width: 290px;
+  }
 }
 </style>

@@ -63,7 +63,6 @@
 }
 .weather.favorite {
   border: 2px solid #ff0000;
-  
 }
 .action__wrapper {
   display: flex;
@@ -80,12 +79,14 @@
 .delete {
   width: 20px;
   height: 20px;
-  right: 20px;
-  bottom: 5px;
   cursor: pointer;
   bottom: 0;
   background-color: black;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .action__wrapper-favorites {
   display: flex;

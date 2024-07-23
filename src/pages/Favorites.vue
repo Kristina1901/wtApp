@@ -183,18 +183,7 @@ const deleteFromFavorites = (cityName: string) => {
     (city) => city.name !== cityName
   );
   localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity.value));
-  if (city.value?.name === cityName) {
-    city.value = favoritesCity.value.length > 0 ? favoritesCity.value[0] : null;
-  }
 };
-watch(favoritesCity, () => {
-  if (
-    city.value &&
-    !favoritesCity.value.some((favCity) => favCity.name === city.value?.name)
-  ) {
-    city.value = null;
-  }
-});
 watch([locale, timePeriod, partDay], async () => {
   if (city.value) {
     await fetchWeather();
