@@ -64,7 +64,6 @@ const selectCity = (city: City) => {
 }
 .list__item-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .city__name {
@@ -75,6 +74,9 @@ const selectCity = (city: City) => {
 @media (min-width: 1440px) {
   .list {
     width: 290px;
+  }
+  .list__item-content {
+    width: 90%;
   }
 }
 </style>

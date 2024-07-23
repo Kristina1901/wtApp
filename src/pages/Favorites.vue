@@ -183,6 +183,7 @@ const deleteFromFavorites = (cityName: string) => {
     (city) => city.name !== cityName
   );
   localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity.value));
+  city.value = null;
 };
 watch([locale, timePeriod, partDay], async () => {
   if (city.value) {
