@@ -85,50 +85,40 @@ const isFavorite = ref<boolean>(false);
 const fetchWeather = async () => {
   if (!city.value?.latitude) return;
   isLoading.changeStateTrue();
-  try {
-    if (timePeriod.value === "day") {
-      const weatherData = await fetchWeatherByDay();
-      if (weatherData) {
-        weatherbyDay.value = weatherData;
-        updateForecasts(weatherData);
-      }
-    } else {
-      const weatherDataWeek = await fetchWeatherByWeek();
-      if (weatherDataWeek) {
-        weatherbyWeek.value = groupTemperaturesByDay(weatherDataWeek);
-      }
+  if (timePeriod.value === "day") {
+    const weatherData = await fetchWeatherByDay();
+    if (weatherData) {
+      weatherbyDay.value = weatherData;
+      updateForecasts(weatherData);
     }
-  } finally {
-    isLoading.changeStateFalse();
+  } else {
+    const weatherDataWeek = await fetchWeatherByWeek();
+    if (weatherDataWeek) {
+      weatherbyWeek.value = groupTemperaturesByDay(weatherDataWeek);
+    }
   }
+  isLoading.changeStateFalse();
 };
 const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
   if (!city.value?.latitude) return null;
-  try {
-    return await getUserWeatherByAllDay(
-      city.value.latitude,
-      city.value.longitude,
-      "73cf37f869c512fdb495b65988133601",
-      locale.value
-    );
-  } catch (error) {
-    return null;
-  }
+
+  return await getUserWeatherByAllDay(
+    city.value.latitude,
+    city.value.longitude,
+    "73cf37f869c512fdb495b65988133601",
+    locale.value
+  );
 };
 const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
-  if (!city.value?.latitude || !city.value?.longitude) {
+  if (!city.value?.latitude) {
     return null;
   }
-  try {
-    return await getUserWeatherByAllWeek(
-      city.value.latitude,
-      city.value.longitude,
-      "73cf37f869c512fdb495b65988133601",
-      locale.value
-    );
-  } catch (error) {
-    return null;
-  }
+  return await getUserWeatherByAllWeek(
+    city.value.latitude,
+    city.value.longitude,
+    "73cf37f869c512fdb495b65988133601",
+    locale.value
+  );
 };
 const handlePartDayChange = (newPartOfDay: "day" | "night") => {
   partDay.value = newPartOfDay;
