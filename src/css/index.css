@@ -136,4 +136,7 @@
   .button__wrapper-sub {
     flex-direction: row;
   }
+  .wrapper {
+    padding-bottom: 100px;
+  }
 }
