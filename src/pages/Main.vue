@@ -116,7 +116,7 @@ const showDeleteCityModal = ref<boolean>(false);
 const cityToDelete = ref<string | null>(null);
 
 const fetchWeather = async () => {
-  if (!city.value?.latitude) {
+  if (!city.value) {
     return;
   }
   isLoading.changeStateTrue();
@@ -136,7 +136,7 @@ const fetchWeather = async () => {
   isLoading.changeStateFalse();
 };
 const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
-  if (!city.value?.latitude) {
+  if (!city.value) {
     return null;
   }
   return await getUserWeatherByAllDay(
@@ -147,7 +147,7 @@ const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
   );
 };
 const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
-  if (!city.value?.latitude) {
+  if (!city.value) {
     return null;
   }
   return await getUserWeatherByAllWeek(
