@@ -13,9 +13,10 @@
   height: 30px;
   font-size: 14px;
   border-radius: 5px;
-  background: #3457d5;
-  color: white;
-  border: 1px solid #00008b;
+  background: transparent;
+  color: #797979;
+  border: none;
+  box-shadow: 2px 2px 2px 1px #797979;
 }
 .wrapper {
   display: flex;
@@ -25,10 +26,10 @@
 .weather {
   display: flex;
   align-items: center;
-  border: 2px solid #3457d5;
+  border: 2px solid #8d8d92;
   justify-content: space-between;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 50px;
   max-height: 70px;
   min-height: 70px;
   height: 70px;
@@ -76,11 +77,11 @@
   margin-top: 20px;
 }
 .delete {
-  width: 20px;
+  width: 30px;
   height: 20px;
   cursor: pointer;
   bottom: 0;
-  background-color: black;
+  background-color: #15182d;
   color: white;
   display: flex;
   align-items: center;

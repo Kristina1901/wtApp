@@ -12,7 +12,7 @@
   margin-top: 20px;
 }
 #nav .router-link-exact-active {
-  color: purple;
+  color: #797979;
   text-decoration: underline;
   text-underline-offset: 7px;
 }

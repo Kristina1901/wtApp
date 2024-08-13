@@ -5,7 +5,7 @@
 <style scoped>
 .loader {
   border: 16px solid #f3f3f3;
-  border-top: 16px solid #3457d5;
+  border-top: 16px solid #ff7a00;
   border-radius: 50%;
   width: 120px;
   height: 120px;

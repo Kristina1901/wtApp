@@ -35,7 +35,7 @@ const selectCity = (name: City) => {
   padding: 0;
 }
 .list__item {
-  border: 1px solid #00008b;
+  border: 1px solid #797979;
   padding: 10px;
   display: flex;
   justify-content: space-between;

@@ -43,7 +43,9 @@ onMounted(() => {
 
 <style scoped>
 canvas#myChart {
-  background-color: #318ce7;
+  background-color: #15182d;
+  border-radius: 30px;
   width: 100%;
+  padding: 10px;
 }
 </style>

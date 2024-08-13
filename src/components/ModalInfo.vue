@@ -59,6 +59,7 @@ const cancel = () => {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  color: #797979;
 }
 .modal-buttons {
   margin-top: 20px;

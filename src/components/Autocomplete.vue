@@ -122,17 +122,26 @@ onUnmounted(() => {
   margin-top: 20px;
 }
 input {
+  padding: 7px;
   height: 30px;
-  padding: 5px;
   width: 173px;
+  background: #2b2d45;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 .autocomplete-results {
   padding: 0;
   margin: 0;
-  border: 1px solid #00008b;
+  border: 1px solid #797979;
   height: 120px;
   overflow: auto;
   width: 184px;
+  scrollbar-color: #797979 white;
+  scrollbar-width: thin;
+  border-radius: 10px;
+  border: 2px solid #797979;
 }
 .autocomplete-result {
   list-style: none;
@@ -142,7 +151,7 @@ input {
 }
 .autocomplete-result.is-active,
 .autocomplete-result:hover {
-  background-color: #3457d5;
+  background-color: #ff7a00;
   color: white;
 }
 @media (min-width: 1440px) {
