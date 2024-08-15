@@ -14,7 +14,7 @@
       </template>
     </CitiesList>
     <p>{{ city?.name }}</p>
-    <div v-if="city">
+    <div v-if="city.name">
       <div class="action__wrapper-favorites">
         <div class="button__wrapper">
           <div class="button__wrapper-sub">
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, reactive } from "vue";
 import { getUserWeatherByAllDay, getUserWeatherByAllWeek } from "../api/api";
 import {
   UserWeather,
@@ -79,11 +79,43 @@ import CitiesList from "../components/CitiesList.vue";
 import { groupTemperaturesByDay, filterHourlyForecast } from "../helpers/index";
 import ModalInfo from "../components/ModalInfo.vue";
 
-const city = ref<City | null>(null);
-const weatherbyDay = ref<UserWeather | null>(null);
-const weatherbyWeek = ref<WeatherByWeekAverage | null>(null);
-const hourlyForecastByDay = ref<HourlyForecast[]>([]);
-const hourlyForecastByNight = ref<HourlyForecast[]>([]);
+const city = reactive<City>({
+  name: "",
+  latitude: 0,
+  longitude: 0,
+});
+const weatherbyDay = reactive<UserWeather>({
+  current: {
+    temp: 0,
+    dt: 0,
+    feels_like: 0,
+    pressure: 0,
+    humidity: 0,
+    dew_point: 0,
+    uvi: 0,
+    clouds: 0,
+    visibility: 0,
+    wind_speed: 0,
+    wind_deg: 0,
+    wind_gust: 0,
+    weather: [
+      {
+        id: 0,
+        main: "",
+        description: "",
+        icon: "",
+      },
+    ],
+  },
+  hourly: [],
+});
+const weatherbyWeek = reactive<WeatherByWeekAverage>({});
+const hourlyForecastByDay = reactive<HourlyForecast[]>([
+  { dt: 0, temp: 0, formattedTime: "" },
+]);
+const hourlyForecastByNight = reactive<HourlyForecast[]>([
+  { dt: 0, temp: 0, formattedTime: "" },
+]);
 const { locale } = useI18n();
 const isLoading = useLoaderState();
 const partDay = ref<"night" | "day">("day");
@@ -94,38 +126,39 @@ const favoritesCity = ref<City[]>(
 const showDeleteCityModal = ref<boolean>(false);
 const cityToDelete = ref<string | null>(null);
 const fetchWeather = async () => {
-  if (!city) return;
+  if (!city.name) return;
   isLoading.changeStateTrue();
   if (timePeriod.value === "day") {
     const weatherData = await fetchWeatherByDay();
     if (weatherData) {
-      weatherbyDay.value = weatherData;
+      weatherbyDay.current = weatherData.current;
+      weatherbyDay.hourly = weatherData.hourly;
       updateForecasts(weatherData);
     }
   } else {
     const weatherDataWeek = await fetchWeatherByWeek();
     if (weatherDataWeek) {
-      weatherbyWeek.value = groupTemperaturesByDay(weatherDataWeek);
+      Object.assign(weatherbyWeek, groupTemperaturesByDay(weatherDataWeek));
     }
   }
   isLoading.changeStateFalse();
 };
 const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
-  if (!city.value) return null;
+  if (!city.name) return null;
   return await getUserWeatherByAllDay(
-    city.value.latitude,
-    city.value.longitude,
+    city.latitude,
+    city.longitude,
     "73cf37f869c512fdb495b65988133601",
     locale.value
   );
 };
 const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
-  if (!city.value) {
+  if (!city.name) {
     return null;
   }
   return await getUserWeatherByAllWeek(
-    city.value.latitude,
-    city.value.longitude,
+    city.latitude,
+    city.longitude,
     "73cf37f869c512fdb495b65988133601",
     locale.value
   );
@@ -139,17 +172,22 @@ const handleTimePeriodChange = (newTimePeriod: "day" | "week") => {
   fetchWeather();
 };
 const handleCitySelected = (newCity: City) => {
-  city.value = newCity;
+  city.name = newCity.name;
+  city.latitude = newCity.latitude;
+  city.longitude = newCity.longitude;
   if (!favoritesCity.value.some((favCity) => favCity.name === newCity.name)) {
-    city.value = null;
+    resetCity();
   }
   fetchWeather();
 };
 const updateForecasts = (weatherData: UserWeather) => {
-  hourlyForecastByDay.value = filterHourlyForecast(weatherData.hourly, "day");
-  hourlyForecastByNight.value = filterHourlyForecast(
-    weatherData.hourly,
-    "night"
+  const dayForecasts = filterHourlyForecast(weatherData.hourly, "day");
+  const nightForecasts = filterHourlyForecast(weatherData.hourly, "night");
+  hourlyForecastByDay.splice(0, hourlyForecastByDay.length, ...dayForecasts);
+  hourlyForecastByNight.splice(
+    0,
+    hourlyForecastByNight.length,
+    ...nightForecasts
   );
 };
 const loadFavoritesFromLocalStorage = () => {
@@ -178,10 +216,15 @@ const deleteFromFavorites = (cityName: string) => {
     (city) => city.name !== cityName
   );
   localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity.value));
-  city.value = null;
+  resetCity();
+};
+const resetCity = () => {
+  city.name = "";
+  city.latitude = 0;
+  city.longitude = 0;
 };
 watch([locale, timePeriod, partDay], async () => {
-  if (city.value) {
+  if (city.name) {
     await fetchWeather();
   }
 });

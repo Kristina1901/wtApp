@@ -24,11 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, reactive } from "vue";
 import { City } from "../interfaces/interfaces";
 
 const isOpen = ref(false);
-const results = ref<City[]>([]);
+let results = reactive<City[]>([]);
 const emit = defineEmits<{
   (e: "citySelected", cityInfo: City): void;
 }>();
@@ -72,10 +72,10 @@ const setResult = (cityInfo: City) => {
   isOpen.value = false;
 };
 const filterResults = () => {
-  results.value = items.filter((item) =>
+  results = items.filter((item) =>
     item.name.toLowerCase().includes(search.value.toLowerCase())
   );
-  isOpen.value = results.value.length > 0;
+  isOpen.value = results.length > 0;
 };
 const onChange = () => {
   filterResults();
@@ -88,7 +88,7 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 };
 const onArrowDown = () => {
-  if (arrowCounter.value < results.value.length - 1) {
+  if (arrowCounter.value < results.length - 1) {
     arrowCounter.value++;
   }
 };
@@ -98,8 +98,8 @@ const onArrowUp = () => {
   }
 };
 const onEnter = () => {
-  if (arrowCounter.value >= 0 && arrowCounter.value < results.value.length) {
-    setResult(results.value[arrowCounter.value]);
+  if (arrowCounter.value >= 0 && arrowCounter.value < results.length) {
+    setResult(results[arrowCounter.value]);
   }
 };
 const onCitySelect = (selectedCity: City) => {
