@@ -1,6 +1,10 @@
 <template>
   <ul class="list">
-    <li v-for="city in props.favoritesCity" :key="city.name" class="list__item">
+    <li
+      v-for="city in props.favoritesCities"
+      :key="city.name"
+      class="list__item"
+    >
       <div @click="selectCity(city)" class="list__item-content">
         <img src="../assets/img/city.png" alt="city" class="list__item-img" />
         <span class="city__name">{{ city.name }}</span>
@@ -16,7 +20,7 @@
 import { City } from "../interfaces/interfaces";
 
 const props = defineProps<{
-  favoritesCity: City[];
+  favoritesCities: City[];
 }>();
 
 const emit = defineEmits<{

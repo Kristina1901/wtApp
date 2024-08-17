@@ -34,7 +34,7 @@
         v-if="timePeriod === 'day'"
         @partDayChange="handlePartDayChange"
       />
-      <CitiesList :favoritesCity="favoritesCity">
+      <CitiesList :favoritesCities="favoriteCities">
         <template #delete-button="{ cityName }">
           <button class="delete" @click="showDeleteCityConfirmation(cityName)">
             -
@@ -141,7 +141,7 @@ const { locale } = useI18n();
 const isLoading = useLoaderState();
 const partDay = ref<"night" | "day">("day");
 const timePeriod = ref<"day" | "week">("day");
-const favoritesCity = reactive<City[]>([]);
+const favoriteCities = reactive<City[]>([]);
 const isFavorite = ref<boolean>(false);
 const showAddToFavoritesModal = ref<boolean>(false);
 const showDeleteCityModal = ref<boolean>(false);
@@ -204,7 +204,7 @@ onMounted(async () => {
 });
 watch(city, async (newCity) => {
   if (newCity) {
-    isFavorite.value = favoritesCity.some(
+    isFavorite.value = favoriteCities.some(
       (favoriteCity) => favoriteCity.name === newCity.name
     );
   }
@@ -248,35 +248,38 @@ const loadFavoritesFromLocalStorage = () => {
   const storedFavorites = localStorage.getItem("favoritesCity");
   if (storedFavorites) {
     const parsedFavorites = JSON.parse(storedFavorites) as City[];
-    favoritesCity.length = 0;
-    favoritesCity.push(...parsedFavorites);
-    isFavorite.value = favoritesCity.some(
-      (favoriteCity) => favoriteCity.name === city?.name
-    );
+    favoriteCities.length = 0;
+    favoriteCities.push(...parsedFavorites);
+    isFavorite.value = favoriteCities.some((city) => city.name === city?.name);
   }
 };
 const addToFavorites = () => {
   if (city.name) {
-    if (favoritesCity.length >= 5) {
+    if (favoriteCities.length >= 5) {
       showAddToFavoritesModal.value = true;
       return;
     }
     if (
-      !favoritesCity.some((favoriteCity) => favoriteCity.name === city?.name)
+      !favoriteCities.some((favoriteCity) => favoriteCity.name === city?.name)
     ) {
-      favoritesCity.push(city);
-      localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity));
+      const newCity = {
+        name: city.name,
+        latitude: city.latitude,
+        longitude: city.longitude,
+      };
+      favoriteCities.push(newCity);
+      localStorage.setItem("favoritesCity", JSON.stringify(favoriteCities));
       isFavorite.value = true;
     }
   }
 };
 const deleteFromFavorites = (cityName: string) => {
-  const index = favoritesCity.findIndex((city) => city.name === cityName);
+  const index = favoriteCities.findIndex((city) => city.name === cityName);
   if (index !== -1) {
-    favoritesCity.splice(index, 1);
+    favoriteCities.splice(index, 1);
   }
-  localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity));
-  isFavorite.value = favoritesCity.some(
+  localStorage.setItem("favoritesCity", JSON.stringify(favoriteCities));
+  isFavorite.value = favoriteCities.some(
     (favoriteCity) => favoriteCity.name === city?.name
   );
 };
@@ -306,8 +309,8 @@ const confirmAddToFavorites = () => {
       if (!favorites.some((favoriteCity) => favoriteCity.name === city?.name)) {
         favorites.push(city);
         localStorage.setItem("favoritesCity", JSON.stringify(favorites));
-        favoritesCity.length = 0;
-        favoritesCity.push(...favorites);
+        favoriteCities.length = 0;
+        favoriteCities.push(...favorites);
         isFavorite.value = true;
       }
     }
