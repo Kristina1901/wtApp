@@ -84,4 +84,8 @@ const selectCity = (name: City) => {
     width: 90%;
   }
 }
+.list__item-content {
+  display: flex;
+  align-items: center;
+}
 </style>
