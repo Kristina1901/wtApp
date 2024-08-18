@@ -1,10 +1,10 @@
 <template>
-  <div v-if="favoritesCity.length === 0" class="favorites__container">
+  <div v-if="favoriteCities.length === 0" class="favorites__container">
     <p>{{ $t("notFound") }}</p>
   </div>
   <div v-else class="favorites__container">
     <CitiesList
-      :favoritesCity="favoritesCity"
+      :favoriteCities="favoriteCities"
       @city-selected="handleCitySelected"
     >
       <template #delete-button="{ cityName }">
@@ -120,7 +120,7 @@ const { locale } = useI18n();
 const isLoading = useLoaderState();
 const partDay = ref<"night" | "day">("day");
 const timePeriod = ref<"day" | "week">("day");
-const favoritesCity = ref<City[]>(
+const favoriteCities = ref<City[]>(
   JSON.parse(localStorage.getItem("favoritesCity") || "[]")
 );
 const showDeleteCityModal = ref<boolean>(false);
@@ -175,7 +175,7 @@ const handleCitySelected = (newCity: City) => {
   city.name = newCity.name;
   city.latitude = newCity.latitude;
   city.longitude = newCity.longitude;
-  if (!favoritesCity.value.some((favCity) => favCity.name === newCity.name)) {
+  if (!favoriteCities.value.some((favCity) => favCity.name === newCity.name)) {
     resetCity();
   }
   fetchWeather();
@@ -193,7 +193,7 @@ const updateForecasts = (weatherData: UserWeather) => {
 const loadFavoritesFromLocalStorage = () => {
   const storedFavorites = localStorage.getItem("favoritesCity");
   if (storedFavorites) {
-    favoritesCity.value = JSON.parse(storedFavorites);
+    favoriteCities.value = JSON.parse(storedFavorites);
   }
 };
 const confirmDeleteFromFavorites = (cityName: string) => {
@@ -212,10 +212,10 @@ const cancelDelete = () => {
   showDeleteCityModal.value = false;
 };
 const deleteFromFavorites = (cityName: string) => {
-  favoritesCity.value = favoritesCity.value.filter(
+  favoriteCities.value = favoriteCities.value.filter(
     (city) => city.name !== cityName
   );
-  localStorage.setItem("favoritesCity", JSON.stringify(favoritesCity.value));
+  localStorage.setItem("favoritesCity", JSON.stringify(favoriteCities.value));
   resetCity();
 };
 const resetCity = () => {

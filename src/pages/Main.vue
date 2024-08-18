@@ -34,7 +34,7 @@
         v-if="timePeriod === 'day'"
         @partDayChange="handlePartDayChange"
       />
-      <CitiesList :favoritesCities="favoriteCities">
+      <CitiesList :favoriteCities="favoriteCities">
         <template #delete-button="{ cityName }">
           <button class="delete" @click="showDeleteCityConfirmation(cityName)">
             -

@@ -1,7 +1,7 @@
 <template>
   <ul class="list">
     <li
-      v-for="city in props.favoritesCities"
+      v-for="city in props.favoriteCities"
       :key="city.name"
       class="list__item"
     >
@@ -20,7 +20,7 @@
 import { City } from "../interfaces/interfaces";
 
 const props = defineProps<{
-  favoritesCities: City[];
+  favoriteCities: City[];
 }>();
 
 const emit = defineEmits<{
