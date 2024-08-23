@@ -2,7 +2,11 @@ import {
   WeatherByDataWeek,
   TemperatureData,
   WeatherData,
+  UserWeather,
+  City,
 } from "../interfaces/interfaces";
+import { getUserWeatherByAllDay, getUserWeatherByAllWeek } from "../api/api";
+
 export const groupTemperaturesByDay = (data: WeatherByDataWeek) => {
   const grouped: Record<string, TemperatureData> = {};
   data.list.forEach((entry) => {
@@ -55,4 +59,32 @@ export const filterHourlyForecast = (
     temp: forecast.temp,
     formattedTime: formatDate(forecast.dt),
   }));
+};
+export const getWeatherByDay = async (
+  city: City,
+  locale: string
+): Promise<UserWeather | null> => {
+  if (!city.name) {
+    return null;
+  }
+  return await getUserWeatherByAllDay(
+    city.latitude,
+    city.longitude,
+    "73cf37f869c512fdb495b65988133601",
+    locale
+  );
+};
+export const getWeatherByWeek = async (
+  city: City,
+  locale: string
+): Promise<WeatherByDataWeek | null> => {
+  if (!city.name) {
+    return null;
+  }
+  return await getUserWeatherByAllWeek(
+    city.latitude,
+    city.longitude,
+    "73cf37f869c512fdb495b65988133601",
+    locale
+  );
 };

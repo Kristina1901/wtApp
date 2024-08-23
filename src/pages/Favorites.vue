@@ -62,11 +62,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, reactive } from "vue";
-import { getUserWeatherByAllDay, getUserWeatherByAllWeek } from "../api/api";
 import {
   UserWeather,
   HourlyForecast,
-  WeatherByDataWeek,
   WeatherByWeekAverage,
   City,
 } from "../interfaces/interfaces";
@@ -76,7 +74,12 @@ import { useLoaderState } from "../store/isloading";
 import Loader from "../components/Loader.vue";
 import SwitchPartDay from "../components/SwitchPartDay.vue";
 import CitiesList from "../components/CitiesList.vue";
-import { groupTemperaturesByDay, filterHourlyForecast } from "../helpers/index";
+import {
+  groupTemperaturesByDay,
+  filterHourlyForecast,
+  getWeatherByWeek,
+  getWeatherByDay,
+} from "../helpers/index";
 import ModalInfo from "../components/ModalInfo.vue";
 
 const city = reactive<City>({
@@ -129,40 +132,21 @@ const fetchWeather = async () => {
   if (!city.name) return;
   isLoading.changeStateTrue();
   if (timePeriod.value === "day") {
-    const weatherData = await fetchWeatherByDay();
+    const weatherData = await getWeatherByDay(city, locale.value);
     if (weatherData) {
       weatherbyDay.current = weatherData.current;
       weatherbyDay.hourly = weatherData.hourly;
       updateForecasts(weatherData);
     }
   } else {
-    const weatherDataWeek = await fetchWeatherByWeek();
+    const weatherDataWeek = await getWeatherByWeek(city, locale.value);
     if (weatherDataWeek) {
       Object.assign(weatherbyWeek, groupTemperaturesByDay(weatherDataWeek));
     }
   }
   isLoading.changeStateFalse();
 };
-const fetchWeatherByDay = async (): Promise<UserWeather | null> => {
-  if (!city.name) return null;
-  return await getUserWeatherByAllDay(
-    city.latitude,
-    city.longitude,
-    "73cf37f869c512fdb495b65988133601",
-    locale.value
-  );
-};
-const fetchWeatherByWeek = async (): Promise<WeatherByDataWeek | null> => {
-  if (!city.name) {
-    return null;
-  }
-  return await getUserWeatherByAllWeek(
-    city.latitude,
-    city.longitude,
-    "73cf37f869c512fdb495b65988133601",
-    locale.value
-  );
-};
+
 const handlePartDayChange = (newPartOfDay: "day" | "night") => {
   partDay.value = newPartOfDay;
   fetchWeather();
