@@ -250,7 +250,6 @@ const loadFavoritesFromLocalStorage = () => {
     const parsedFavorites = JSON.parse(storedFavorites) as City[];
     favoriteCities.length = 0;
     favoriteCities.push(...parsedFavorites);
-    isFavorite.value = favoriteCities.some((city) => city.name === city?.name);
   }
 };
 const addToFavorites = () => {
@@ -279,9 +278,6 @@ const deleteFromFavorites = (cityName: string) => {
     favoriteCities.splice(index, 1);
   }
   localStorage.setItem("favoritesCity", JSON.stringify(favoriteCities));
-  isFavorite.value = favoriteCities.some(
-    (favoriteCity) => favoriteCity.name === city?.name
-  );
 };
 const showDeleteCityConfirmation = (cityName: string) => {
   cityToDelete.value = cityName;
@@ -311,7 +307,6 @@ const confirmAddToFavorites = () => {
         localStorage.setItem("favoritesCity", JSON.stringify(favorites));
         favoriteCities.length = 0;
         favoriteCities.push(...favorites);
-        isFavorite.value = true;
       }
     }
   }
